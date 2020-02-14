@@ -52,19 +52,13 @@ fn main() {
 
     for line in io::stdin().lock().lines() {
         let i = parse_input(line.expect("Failed to read line"));
-        largest = largest
-            .map(|lrg| {
-                if let Some(res) = i.cmp(&lrg) {
-                    if res == Ordering::Greater {
-                        i.clone()
-                    } else {
-                        lrg
-                    }
-                } else {
-                    lrg
-                }
-            })
-            .or(Some(i.clone()))
+        largest = match largest {
+            None => Some(i),
+            Some(lrg) => match i.cmp(&lrg) {
+                Some(Ordering::Greater) => Some(i),
+                _ => Some(lrg)
+            }
+        }
     }
 
     if let Some(input) = largest {
